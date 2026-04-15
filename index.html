@@ -17,8 +17,9 @@
         #safe-zone { display: none; background: #0d1117; color: #c9d1d9; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
         .box { background: #161b22; border: 1px solid #30363d; padding: 25px; border-radius: 6px; width: 100%; max-width: 400px; text-align: left; box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
         input, textarea { width: 100%; background: #010409; border: 1px solid #30363d; color: #e6edf3; padding: 12px; margin-bottom: 12px; border-radius: 6px; box-sizing: border-box; font-size: 16px; outline: none; }
-        button { background: #238636; color: #fff; border: 1px solid rgba(240,246,252,0.1); padding: 12px; border-radius: 6px; width: 100%; font-weight: 600; cursor: pointer; font-size: 14px; }
-        #output { background: #010409; border: 1px solid #30363d; padding: 12px; border-radius: 6px; min-height: 60px; word-break: break-all; font-family: monospace; font-size: 12px; margin-top: 15px; color: #7ee787; overflow-y: auto; }
+        button { background: #238636; color: #fff; border: 1px solid rgba(240,246,252,0.1); padding: 12px; border-radius: 6px; width: 100%; font-weight: 600; cursor: pointer; font-size: 14px; margin-bottom: 8px; }
+        #output { background: #010409; border: 1px solid #30363d; padding: 12px; border-radius: 6px; min-height: 60px; word-break: break-all; font-family: monospace; font-size: 12px; margin-top: 15px; color: #7ee787; overflow-y: auto; max-height: 100px; }
+        .copy-btn { background: #30363d; color: #c9d1d9; border: 1px solid #444; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -46,16 +47,20 @@
             <input type="password" id="commune" placeholder="Clé AES commune">
             <textarea id="input-text" placeholder="Message ou code..."></textarea>
             <button onclick="process(true)">🔒 CRYPTER</button>
-            <button style="background:#30363d; margin-top:8px;" onclick="process(false)">🔓 DÉCRYPTER</button>
+            <button onclick="process(false)" style="background:#30363d;">🔓 DÉCRYPTER</button>
+            
             <div id="output">...</div>
-            <button onclick="location.reload()" style="background:transparent; color:#8b949e; margin-top:10px; font-size:12px; border:none;">✖ QUITTER</button>
+            <button class="copy-btn" onclick="copyToClipboard()">📋 COPIER LE RÉSULTAT</button>
+            
+            <button onclick="location.reload()" style="background:transparent; color:#8b949e; margin-top:15px; font-size:12px; border:none; width:100%;">✖ QUITTER</button>
         </div>
     </div>
 
     <script>
-        // Le mot de passe n'est pas "en brut", c'est une version encodée de "pizza"
-        // Personne ne peut deviner le mot en lisant ça.
-        const _0x4a2 = "cGl6emE="; 
+        // Mot de passe : Vannes2014 (découpé pour ne pas être en brut)
+        const _p1 = "Vann";
+        const _p2 = "es20";
+        const _p3 = "14";
 
         function unlock() {
             document.getElementById('github-404').style.display = 'none';
@@ -63,50 +68,46 @@
             document.body.style.backgroundColor = "#0d1117";
         }
 
-        // --- MOBILE ---
-        let taps = 0;
-        let last = 0;
         function checkMobile() {
-            const now = Date.now();
-            if (now - last < 500) taps++; else taps = 1;
-            last = now;
+            window.taps = (window.taps || 0) + 1;
+            clearTimeout(window.tapTimer);
+            window.tapTimer = setTimeout(() => { window.taps = 0; }, 2000);
 
-            if (taps >= 5) {
-                taps = 0;
+            if (window.taps >= 5) {
                 const entry = prompt("Access code:");
-                if (!entry) return;
-                
-                // On compare avec la version décodée
-                if (entry.toLowerCase().trim() === atob(_0x4a2)) {
-                    unlock();
-                } else {
-                    alert("Unauthorized.");
-                }
+                // On vérifie le mot de passe exact (Respecte les majuscules)
+                if (entry && entry.trim() === (_p1 + _p2 + _p3)) unlock();
+                else if (entry) alert("Unauthorized.");
+                window.taps = 0;
             }
         }
 
-        // --- PC (Clavier) ---
         let keys = "";
         window.addEventListener("keydown", (e) => {
             if (e.key.length !== 1) return;
-            keys += e.key.toLowerCase();
-            if (keys.length > 20) keys = keys.slice(-20);
-            if (keys.includes(atob(_0x4a2))) {
-                keys = "";
-                unlock();
-            }
+            keys += e.key; // Garde la casse pour le clavier PC
+            if (keys.slice(-10) === (_p1 + _p2 + _p3)) unlock();
         });
 
-        // --- AES ---
         function process(enc) {
             const txt = document.getElementById('input-text').value;
             const key = document.getElementById('commune').value;
             const out = document.getElementById('output');
-            if(!txt || !key) return alert("Missing info");
+            if(!txt || !key) return alert("Champs vides");
             try {
                 if(enc) out.innerText = CryptoJS.AES.encrypt(txt, key).toString();
-                else out.innerText = CryptoJS.AES.decrypt(txt, key).toString(CryptoJS.enc.Utf8) || "Wrong Key";
-            } catch(e) { out.innerText = "Error"; }
+                else out.innerText = CryptoJS.AES.decrypt(txt, key).toString(CryptoJS.enc.Utf8) || "Clé incorrecte";
+            } catch(e) { out.innerText = "Erreur de format"; }
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('output').innerText;
+            if (text === "..." || text === "") return;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.innerText = "✅ COPIÉ !";
+                setTimeout(() => { btn.innerText = "📋 COPIER LE RÉSULTAT"; }, 2000);
+            });
         }
     </script>
 </body>
