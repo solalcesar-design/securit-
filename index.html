@@ -1,85 +1,101 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>404 Not Found</title>
+    <meta charset="utf-8">
+    <title>Page not found · GitHub Pages</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
-        body { font-family: 'Courier New', monospace; background: white; color: #333; margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
-        #fake-404 { text-align: left; width: 80%; max-width: 600px; }
-        #safe-zone { display: none; background: #1a1a1a; color: #00ff00; padding: 30px; border-radius: 5px; box-shadow: 0 0 20px rgba(0,0,0,0.5); width: 90%; max-width: 500px; }
-        textarea, input { width: 100%; background: #000; border: 1px solid #00ff00; color: #00ff00; padding: 10px; margin: 10px 0; box-sizing: border-box; }
-        button { background: #00ff00; color: black; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; width: 100%; margin: 5px 0; }
-        button:hover { background: #00cc00; }
-        .result-area { margin-top: 15px; padding: 10px; border: 1px dashed #00ff00; min-height: 50px; word-break: break-all; font-size: 0.9em; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; color: #24292e; background-color: #fff; }
+        h1 { font-size: 80px; font-weight: 300; margin: 0; }
+        p { font-size: 18px; color: #6a737d; margin: 15px 0; }
+        .details { font-size: 14px; color: #586069; max-width: 500px; line-height: 1.5; }
+        .footer { position: absolute; bottom: 20px; font-size: 12px; color: #586069; }
+        a { color: #0366d6; text-decoration: none; }
+        
+        /* L'interface secrète est cachée */
+        #safe-zone { display: none; background: #0d1117; color: #c9d1d9; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; padding: 20px; box-sizing: border-box; flex-direction: column; align-items: center; justify-content: center; }
+        .box { background: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 6px; width: 90%; max-width: 500px; }
+        textarea, input { width: 100%; background: #010409; border: 1px solid #30363d; color: #e6edf3; padding: 10px; margin: 10px 0; border-radius: 6px; box-sizing: border-box; }
+        button { background: #238636; color: white; border: 1px solid rgba(240,246,252,0.1); padding: 10px; cursor: pointer; border-radius: 6px; width: 100%; font-weight: 600; margin-top: 5px; }
+        button:hover { background: #2ea043; }
+        #output { margin-top: 15px; padding: 10px; background: #010409; border: 1px solid #30363d; min-height: 40px; word-break: break-all; font-family: monospace; font-size: 12px; }
     </style>
 </head>
 <body>
 
-    <div id="fake-404">
-        <h1>404 Not Found</h1>
-        <p>The requested URL was not found on this server.</p>
-        <hr>
-        <address>Apache/2.4.41 (Ubuntu) Server at localhost Port 443</address>
+    <div id="content-404">
+        <h1>404</h1>
+        <p><strong>File not found</strong></p>
+        <div class="details">
+            The site configured at this address does not contain the requested file.<br><br>
+            If this is your site, make sure that the filename case matches the URL as well as any file permissions.<br>
+            For root URLs (like http://example.com/) you must provide an index.html file.<br><br>
+            <a href="#">Read the full documentation</a> for more information about using <strong>GitHub Pages</strong>.
+        </div>
+        <div class="footer">
+            GitHub Status — @githubstatus <br><br>
+            <svg height="32" viewBox="0 0 16 16" version="1.1" width="32" aria-hidden="true"><path fill="#e1e4e8" fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+        </div>
     </div>
 
     <div id="safe-zone">
-        <h3>[ SYSTÈME DE MESSAGERIE CHIFFRÉ ]</h3>
-        <input type="password" id="key" placeholder="CLEF DE CHIFFREMENT">
-        <textarea id="data" placeholder="Message à crypter OU Code à décrypter"></textarea>
-        
-        <button onclick="process(true)">CHIFFRER (ENCRYPT)</button>
-        <button onclick="process(false)">DÉCHIFFRER (DECRYPT)</button>
-
-        <div class="result-area" id="output">En attente d'action...</div>
-        <button onclick="copyToClipboard()" style="background:#444; color:white; font-size:0.8em;">Copier le résultat</button>
+        <div class="box">
+            <h2 style="margin-top:0">Secure Messenger</h2>
+            <input type="password" id="secret-key" placeholder="Clef de chiffrement (AES)">
+            <textarea id="input-text" placeholder="Message ou code crypté..."></textarea>
+            <button onclick="run(true)">CRYPTER</button>
+            <button onclick="run(false)">DÉCRYPTER</button>
+            <div id="output">Résultat...</div>
+            <button onclick="copy()" style="background:#30363d; font-size:12px; margin-top:10px;">COPIER LE RÉSULTAT</button>
+        </div>
     </div>
 
     <script>
-        // Le code d'activation est 'access' (tu peux le changer ici)
-        let combo = "";
-        const trigger = "access"; 
+        // CONFIGURATION SÉCURISÉE
+        // Ce hash correspond au mot "pizza". Tu peux le changer.
+        // Pour générer ton propre hash, tape ton mot ici : https://emn178.github.io/online-tools/sha256.html
+        const HASH_PROTECTION = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918"; 
 
-        window.onkeydown = (e) => {
-            combo += e.key;
-            if (combo.includes(trigger)) {
-                document.getElementById('fake-404').style.display = 'none';
-                document.getElementById('safe-zone').style.display = 'block';
-                document.body.style.background = '#0a0a0a';
-            }
-        };
+        let keysTyped = "";
+        window.addEventListener("keydown", (e) => {
+            keysTyped += e.key;
+            // On vérifie si les derniers caractères tapés correspondent au hash
+            // (Ici on vérifie à chaque touche pour ne pas ralentir le site)
+            if (keysTyped.length > 20) keysTyped = keysTyped.substring(1); 
+            
+            // Pour déverrouiller, il faut taper le mot secret au clavier
+            // Si le mot est "pizza", taper p-i-z-z-a n'importe où.
+            checkAccess();
+        });
 
-        function process(isEncrypt) {
-            const text = document.getElementById('data').value;
-            const password = document.getElementById('key').value;
-            const outputDiv = document.getElementById('output');
-
-            if (!text || !password) {
-                alert("Erreur: Remplissez tous les champs.");
-                return;
-            }
-
-            try {
-                if (isEncrypt) {
-                    // Chiffrement AES-256
-                    const encrypted = CryptoJS.AES.encrypt(text, password).toString();
-                    outputDiv.innerText = encrypted;
-                } else {
-                    // Déchiffrement
-                    const bytes = CryptoJS.AES.decrypt(text, password);
-                    const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-                    
-                    if (!decrypted) throw new Error();
-                    outputDiv.innerText = decrypted;
+        function checkAccess() {
+            // On teste tous les mots possibles dans la chaîne tapée
+            for(let i=0; i<keysTyped.length; i++) {
+                let word = keysTyped.substring(i);
+                if(CryptoJS.SHA256(word).toString() === HASH_PROTECTION) {
+                    document.getElementById('content-404').style.display = 'none';
+                    document.getElementById('safe-zone').style.display = 'flex';
                 }
-            } catch (e) {
-                outputDiv.innerText = "ERREUR : Clef invalide ou données corrompues.";
             }
         }
 
-        function copyToClipboard() {
-            const text = document.getElementById('output').innerText;
-            navigator.clipboard.writeText(text);
+        function run(encrypt) {
+            const text = document.getElementById('input-text').value;
+            const pass = document.getElementById('secret-key').value;
+            if(!pass) return alert("Entrez une clef !");
+            
+            try {
+                if(encrypt) {
+                    document.getElementById('output').innerText = CryptoJS.AES.encrypt(text, pass).toString();
+                } else {
+                    const dec = CryptoJS.AES.decrypt(text, pass).toString(CryptoJS.enc.Utf8);
+                    document.getElementById('output').innerText = dec || "Erreur : Clef incorrecte";
+                }
+            } catch(e) { document.getElementById('output').innerText = "Erreur de format"; }
+        }
+
+        function copy() {
+            navigator.clipboard.writeText(document.getElementById('output').innerText);
             alert("Copié !");
         }
     </script>
