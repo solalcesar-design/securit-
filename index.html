@@ -6,22 +6,31 @@
     <title>Page not found · GitHub Pages</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
-        /* CSS EXACT DE GITHUB 404 */
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; background-color: #fff; line-height: 1.5; }
+        /* DESIGN EXACT GITHUB 404 */
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; background-color: #fff; }
         h1 { font-size: 80px; font-weight: 300; margin: 0; color: #24292e; }
         p { font-size: 18px; font-weight: 600; color: #24292e; margin: 10px 0 0; }
-        .details { font-size: 14px; color: #586069; max-width: 480px; margin: 20px auto; padding: 0 20px; }
+        .details { font-size: 14px; color: #586069; max-width: 480px; margin: 20px auto; padding: 0 20px; line-height: 1.5; }
         .details a { color: #0366d6; text-decoration: none; }
         .footer { position: absolute; bottom: 40px; color: #586069; font-size: 12px; width: 100%; }
-        .footer-logo { margin-top: 20px; color: #e1e4e8; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        .footer-logo {
+            margin-top: 20px;
+            color: #e1e4e8;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            display: inline-block;
+            user-select: none;
+        }
 
-        /* INTERFACE SECRÈTE (CACHÉE) */
+        /* INTERFACE SECRÈTE */
         #safe-zone { display: none; background: #0d1117; color: #c9d1d9; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
         .box { background: #161b22; border: 1px solid #30363d; padding: 24px; border-radius: 6px; width: 100%; max-width: 400px; text-align: left; }
-        h2 { margin: 0 0 15px; font-size: 20px; font-weight: 400; color: #58a6ff; }
-        input, textarea { width: 100%; background: #010409; border: 1px solid #30363d; color: #e6edf3; padding: 10px; margin-bottom: 12px; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        button { background: #238636; color: #fff; border: 1px solid rgba(240,246,252,0.1); padding: 10px 16px; border-radius: 6px; width: 100%; font-weight: 500; cursor: pointer; margin-bottom: 8px; font-size: 14px; }
-        #output { background: #010409; border: 1px solid #30363d; padding: 10px; border-radius: 6px; min-height: 60px; word-break: break-all; font-family: monospace; font-size: 12px; margin-top: 10px; color: #7ee787; }
+        input, textarea { width: 100%; background: #010409; border: 1px solid #30363d; color: #e6edf3; padding: 12px; margin-bottom: 12px; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        button { background: #238636; color: #fff; border: none; padding: 12px; border-radius: 6px; width: 100%; font-weight: 600; cursor: pointer; }
+        #output { background: #010409; border: 1px solid #30363d; padding: 10px; border-radius: 6px; min-height: 60px; word-break: break-all; font-family: monospace; font-size: 12px; margin-top: 10px; color: #7ee787; overflow-y: auto; }
+
+        /* Feedback visuel discret pour les taps mobile */
+        .footer-logo.tapped { color: #c0c0c0; transition: color 0.1s; }
     </style>
 </head>
 <body>
@@ -31,70 +40,114 @@
         <p>File not found</p>
         <div class="details">
             The site configured at this address does not contain the requested file.<br><br>
-            If this is your site, make sure that the filename case matches the URL as well as any file permissions.<br>
-            For root URLs (like http://example.com/) you must provide an index.html file.<br><br>
-            <a href="https://docs.github.com/pages">Read the full documentation</a> for more information about using <strong>GitHub Pages</strong>.
+            If this is your site, make sure that the filename case matches the URL as well as any file permissions.<br><br>
+            <a href="#">Read the full documentation</a>
         </div>
         <div class="footer">
             GitHub Status — @githubstatus
-            <div class="footer-logo" onclick="accessMobile()">
-                <svg height="32" viewBox="0 0 16 16" version="1.1" width="32" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+            <div class="footer-logo" id="logo-btn">
+                <svg height="32" viewBox="0 0 16 16" width="32"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
             </div>
         </div>
     </div>
 
     <div id="safe-zone">
         <div class="box">
-            <h2>Secure Vault</h2>
-            <input type="password" id="commune" placeholder="Clé commune AES">
-            <textarea id="msg" placeholder="Texte à traiter..."></textarea>
-            <button onclick="run(true)">CRYPTER</button>
-            <button onclick="run(false)">DÉCRYPTER</button>
+            <h2 style="margin:0 0 15px; color:#58a6ff; font-weight:400;">Secure Vault</h2>
+            <input type="password" id="key-aes" placeholder="Clé AES commune">
+            <textarea id="text-input" placeholder="Message ou code..."></textarea>
+            <button onclick="execute(true)">CRYPTER</button>
+            <button style="background:#30363d; margin-top:8px;" onclick="execute(false)">DÉCRYPTER</button>
             <div id="output">...</div>
-            <button onclick="location.reload()" style="background:#30363d; margin-top:15px;">QUITTER</button>
+            <button onclick="location.reload()" style="background:transparent; color:#8b949e; margin-top:10px; font-size:12px; border:none;">✖ QUITTER</button>
         </div>
     </div>
 
     <script>
-        // Empreinte de "pizza"
-        const HASH_TARGET = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918";
+        // ─── HASH SHA-256 DE TON MOT DE PASSE ───────────────────────────────────
+        // Remplace cette valeur par le hash généré avec l'outil fourni par Claude
+        // Exemple ci-dessous = hash de "pizza"
+        const PASSWORD_HASH = "15d95b52ddb8cd8c52f70b51985ce7618e23eb00c17a52c57d22caab8c4e08bb";
+        // ────────────────────────────────────────────────────────────────────────
 
-        function verify(str) {
-            if(!str) return;
-            const check = CryptoJS.SHA256(str.toLowerCase().trim()).toString();
-            if(check === HASH_TARGET) {
-                document.getElementById('github-404').style.display = 'none';
-                document.getElementById('safe-zone').style.display = 'flex';
-                document.body.style.backgroundColor = "#0d1117";
-            } else {
-                alert("Incorrect code.");
+        async function hashInput(str) {
+            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        function openSafeZone() {
+            document.getElementById('github-404').style.display = 'none';
+            document.getElementById('safe-zone').style.display = 'flex';
+            document.body.style.backgroundColor = "#0d1117";
+        }
+
+        // ── MOBILE : 5 taps sur le logo ─────────────────────────────────────────
+        let tapCount = 0;
+        let tapTimer = null;
+        const logoBtn = document.getElementById('logo-btn');
+
+        logoBtn.addEventListener('click', function() {
+            tapCount++;
+
+            // Feedback visuel discret
+            logoBtn.classList.add('tapped');
+            setTimeout(() => logoBtn.classList.remove('tapped'), 100);
+
+            // Reset si trop lent (2 secondes sans tap)
+            clearTimeout(tapTimer);
+            tapTimer = setTimeout(() => { tapCount = 0; }, 2000);
+
+            if (tapCount >= 5) {
+                tapCount = 0;
+                clearTimeout(tapTimer);
+                const entry = prompt("Access code:");
+                if (!entry) return;
+                hashInput(entry.toLowerCase().trim()).then(h => {
+                    if (h === PASSWORD_HASH) {
+                        openSafeZone();
+                    } else {
+                        alert("Unauthorized.");
+                    }
+                });
             }
-        }
-
-        // iPhone : un seul clic sur le logo suffit pour ouvrir le prompt
-        function accessMobile() {
-            const pass = prompt("Access code required:");
-            verify(pass);
-        }
-
-        // PC : taper "pizza" au clavier
-        let buffer = "";
-        window.addEventListener("keydown", (e) => {
-            buffer += e.key.toLowerCase();
-            if (buffer.includes("pizza")) verify("pizza");
-            if (buffer.length > 10) buffer = "";
         });
 
-        // Cryptage AES
-        function run(isEnc) {
-            const t = document.getElementById('msg').value;
-            const k = document.getElementById('commune').value;
-            const o = document.getElementById('output');
-            if(!t || !k) return alert("Missing data");
+        // ── PC : taper le mot de passe au clavier ───────────────────────────────
+        let typedKeys = "";
+        window.addEventListener("keydown", (e) => {
+            // Ignorer les touches spéciales
+            if (e.key.length !== 1) return;
+            typedKeys += e.key.toLowerCase();
+            if (typedKeys.length > 20) typedKeys = typedKeys.slice(-20);
+
+            // On teste les 5, 6, 7... derniers caractères saisis
+            for (let len = 4; len <= typedKeys.length; len++) {
+                const slice = typedKeys.slice(-len);
+                hashInput(slice).then(h => {
+                    if (h === PASSWORD_HASH) {
+                        typedKeys = "";
+                        openSafeZone();
+                    }
+                });
+            }
+        });
+
+        // ── CRYPTAGE / DÉCRYPTAGE AES ────────────────────────────────────────────
+        function execute(encode) {
+            const val = document.getElementById('text-input').value;
+            const k = document.getElementById('key-aes').value;
+            const out = document.getElementById('output');
+            if (!val || !k) return alert("Missing info");
             try {
-                if(isEnc) o.innerText = CryptoJS.AES.encrypt(t, k).toString();
-                else o.innerText = CryptoJS.AES.decrypt(t, k).toString(CryptoJS.enc.Utf8) || "Wrong AES Key";
-            } catch(e) { o.innerText = "Error"; }
+                if (encode) {
+                    out.innerText = CryptoJS.AES.encrypt(val, k).toString();
+                } else {
+                    const dec = CryptoJS.AES.decrypt(val, k).toString(CryptoJS.enc.Utf8);
+                    out.innerText = dec || "Wrong Key";
+                }
+            } catch(e) {
+                out.innerText = "Error";
+            }
         }
     </script>
 </body>
