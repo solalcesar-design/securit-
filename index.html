@@ -1,87 +1,100 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page not found · GitHub Pages</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
-        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; color: #24292e; background-color: #fff; padding: 20px; }
-        #safe-zone { display: none; background: #0d1117; color: #c9d1d9; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; flex-direction: column; align-items: center; justify-content: center; }
-        .box { background: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 12px; width: 100%; max-width: 350px; }
-        textarea, input { width: 100%; background: #010409; border: 1px solid #30363d; color: #e6edf3; padding: 12px; margin: 8px 0; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        button { background: #238636; color: white; border: none; padding: 12px; border-radius: 6px; width: 100%; font-weight: bold; margin-top: 5px; }
-        #output { margin-top: 15px; padding: 10px; background: #000; border: 1px solid #333; min-height: 50px; word-break: break-all; font-family: monospace; font-size: 12px; color: #00ff00; }
-        #trigger { position: absolute; bottom: 20px; cursor: pointer; opacity: 0.1; }
+        /* CSS EXACT DE GITHUB 404 */
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; background-color: #fff; line-height: 1.5; }
+        h1 { font-size: 80px; font-weight: 300; margin: 0; color: #24292e; }
+        p { font-size: 18px; font-weight: 600; color: #24292e; margin: 10px 0 0; }
+        .details { font-size: 14px; color: #586069; max-width: 480px; margin: 20px auto; padding: 0 20px; }
+        .details a { color: #0366d6; text-decoration: none; }
+        .footer { position: absolute; bottom: 40px; color: #586069; font-size: 12px; width: 100%; }
+        .footer-logo { margin-top: 20px; color: #e1e4e8; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+
+        /* INTERFACE SECRÈTE (CACHÉE) */
+        #safe-zone { display: none; background: #0d1117; color: #c9d1d9; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        .box { background: #161b22; border: 1px solid #30363d; padding: 24px; border-radius: 6px; width: 100%; max-width: 400px; text-align: left; }
+        h2 { margin: 0 0 15px; font-size: 20px; font-weight: 400; color: #58a6ff; }
+        input, textarea { width: 100%; background: #010409; border: 1px solid #30363d; color: #e6edf3; padding: 10px; margin-bottom: 12px; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        button { background: #238636; color: #fff; border: 1px solid rgba(240,246,252,0.1); padding: 10px 16px; border-radius: 6px; width: 100%; font-weight: 500; cursor: pointer; margin-bottom: 8px; font-size: 14px; }
+        #output { background: #010409; border: 1px solid #30363d; padding: 10px; border-radius: 6px; min-height: 60px; word-break: break-all; font-family: monospace; font-size: 12px; margin-top: 10px; color: #7ee787; }
     </style>
 </head>
 <body>
 
-    <div id="content-404">
-        <h1 style="font-size: 60px; margin: 0;">404</h1>
+    <div id="github-404">
+        <h1>404</h1>
         <p>File not found</p>
-        <div id="trigger" onclick="demanderCode()">
-            <svg height="32" viewBox="0 0 16 16" width="32"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+        <div class="details">
+            The site configured at this address does not contain the requested file.<br><br>
+            If this is your site, make sure that the filename case matches the URL as well as any file permissions.<br>
+            For root URLs (like http://example.com/) you must provide an index.html file.<br><br>
+            <a href="https://docs.github.com/pages">Read the full documentation</a> for more information about using <strong>GitHub Pages</strong>.
+        </div>
+        <div class="footer">
+            GitHub Status — @githubstatus
+            <div class="footer-logo" onclick="accessMobile()">
+                <svg height="32" viewBox="0 0 16 16" version="1.1" width="32" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
+            </div>
         </div>
     </div>
 
     <div id="safe-zone">
         <div class="box">
-            <h3 style="margin:0">🔒 Système Privé</h3>
-            <input type="password" id="cle-aes" placeholder="Clé Secrète Commune">
-            <textarea id="texte" placeholder="Message ou Code..."></textarea>
-            <button onclick="agir(true)">CRYPTER</button>
-            <button onclick="agir(false)">DÉCRYPTER</button>
+            <h2>Secure Vault</h2>
+            <input type="password" id="commune" placeholder="Clé commune AES">
+            <textarea id="msg" placeholder="Texte à traiter..."></textarea>
+            <button onclick="run(true)">CRYPTER</button>
+            <button onclick="run(false)">DÉCRYPTER</button>
             <div id="output">...</div>
-            <button onclick="location.reload()" style="background:#444; margin-top:10px;">QUITTER</button>
+            <button onclick="location.reload()" style="background:#30363d; margin-top:15px;">QUITTER</button>
         </div>
     </div>
 
     <script>
-        // LE MOT DE PASSE EST ICI EN CLAIR POUR ÉVITER TOUT BUG DE HASH
-        // Personne ne le verra s'ils ne regardent pas le code source.
-        const SECRET = "pizza"; 
+        // Empreinte de "pizza"
+        const HASH_TARGET = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918";
 
-        function demanderCode() {
-            let rep = prompt("Entrez le mot de passe d'accès (Indice: un plat italien)");
-            if (rep) {
-                // On enlève les majuscules et les espaces
-                let propre = rep.toLowerCase().trim();
-                if (propre === SECRET) {
-                    ouvrir();
-                } else {
-                    alert("Code incorrect : '" + propre + "' ne correspond pas.");
-                }
+        function verify(str) {
+            if(!str) return;
+            const check = CryptoJS.SHA256(str.toLowerCase().trim()).toString();
+            if(check === HASH_TARGET) {
+                document.getElementById('github-404').style.display = 'none';
+                document.getElementById('safe-zone').style.display = 'flex';
+                document.body.style.backgroundColor = "#0d1117";
+            } else {
+                alert("Incorrect code.");
             }
         }
 
-        function ouvrir() {
-            document.getElementById('content-404').style.display = 'none';
-            document.getElementById('safe-zone').style.display = 'flex';
-            document.body.style.backgroundColor = "#0d1117";
+        // iPhone : un seul clic sur le logo suffit pour ouvrir le prompt
+        function accessMobile() {
+            const pass = prompt("Access code required:");
+            verify(pass);
         }
 
-        // Détection clavier (PC)
-        let tapage = "";
+        // PC : taper "pizza" au clavier
+        let buffer = "";
         window.addEventListener("keydown", (e) => {
-            tapage += e.key.toLowerCase();
-            if (tapage.includes(SECRET)) ouvrir();
-            if (tapage.length > 10) tapage = "";
+            buffer += e.key.toLowerCase();
+            if (buffer.includes("pizza")) verify("pizza");
+            if (buffer.length > 10) buffer = "";
         });
 
-        function agir(crypter) {
-            const t = document.getElementById('texte').value;
-            const k = document.getElementById('cle-aes').value;
-            if(!t || !k) return alert("Remplis les deux cases !");
-            
+        // Cryptage AES
+        function run(isEnc) {
+            const t = document.getElementById('msg').value;
+            const k = document.getElementById('commune').value;
+            const o = document.getElementById('output');
+            if(!t || !k) return alert("Missing data");
             try {
-                if(crypter) {
-                    document.getElementById('output').innerText = CryptoJS.AES.encrypt(t, k).toString();
-                } else {
-                    const d = CryptoJS.AES.decrypt(t, k).toString(CryptoJS.enc.Utf8);
-                    document.getElementById('output').innerText = d || "Clé incorrecte";
-                }
-            } catch(e) { document.getElementById('output').innerText = "Erreur de texte"; }
+                if(isEnc) o.innerText = CryptoJS.AES.encrypt(t, k).toString();
+                else o.innerText = CryptoJS.AES.decrypt(t, k).toString(CryptoJS.enc.Utf8) || "Wrong AES Key";
+            } catch(e) { o.innerText = "Error"; }
         }
     </script>
 </body>
