@@ -6,19 +6,18 @@
     <title>Page not found · GitHub Pages</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
-        body { font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; color: #24292e; background-color: #fff; padding: 20px; box-sizing: border-box; }
-        h1 { font-size: 70px; font-weight: 300; margin: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; color: #24292e; background-color: #fff; padding: 20px; box-sizing: border-box; }
+        h1 { font-size: 80px; font-weight: 300; margin: 0; }
         p { font-size: 18px; color: #6a737d; margin: 15px 0; }
         .details { font-size: 14px; color: #586069; max-width: 500px; line-height: 1.5; }
         .footer { position: absolute; bottom: 30px; width: 100%; color: #d1d5da; }
         
-        /* Interface Secrète */
         #safe-zone { display: none; background: #0d1117; color: #c9d1d9; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; padding: 20px; box-sizing: border-box; flex-direction: column; align-items: center; justify-content: center; }
         .box { background: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; }
         textarea, input { width: 100%; background: #010409; border: 1px solid #30363d; color: #e6edf3; padding: 12px; margin: 8px 0; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
         button { background: #238636; color: white; border: none; padding: 12px; cursor: pointer; border-radius: 6px; width: 100%; font-weight: 600; margin: 5px 0; font-size: 16px; }
-        #output { margin-top: 15px; padding: 12px; background: #010409; border: 1px solid #30363d; min-height: 80px; word-break: break-all; font-family: monospace; font-size: 13px; border-radius: 6px; text-align: left; overflow-y: auto; }
-        #trigger-icon { padding: 20px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        #output { margin-top: 15px; padding: 12px; background: #010409; border: 1px solid #30363d; min-height: 80px; word-break: break-all; font-family: monospace; font-size: 13px; border-radius: 6px; text-align: left; }
+        #trigger { padding: 20px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
     </style>
 </head>
 <body>
@@ -26,11 +25,9 @@
     <div id="content-404">
         <h1>404</h1>
         <p><strong>File not found</strong></p>
-        <div class="details">
-            The site configured at this address does not contain the requested file.
-        </div>
+        <div class="details">The site configured at this address does not contain the requested file.</div>
         <div class="footer">
-            <div id="trigger-icon" onclick="handleTap()">
+            <div id="trigger" onclick="handleTap()">
                 <svg height="32" viewBox="0 0 16 16" width="32"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
             </div>
         </div>
@@ -38,66 +35,67 @@
 
     <div id="safe-zone">
         <div class="box">
-            <h2 style="margin:0 0 10px 0; color:#58a6ff;">🔐 Vault</h2>
-            <input type="password" id="aes-key" placeholder="Clé Secrète commune">
-            <textarea id="main-input" placeholder="Message ou code..."></textarea>
+            <h2 style="margin:0 0 10px 0; color:#58a6ff;">🔐 Vault Privé</h2>
+            <input type="password" id="aes-key" placeholder="Clé de chiffrement (AES)">
+            <textarea id="main-input" placeholder="Message..."></textarea>
             <button onclick="run(true)">CRYPTER</button>
             <button onclick="run(false)">DÉCRYPTER</button>
             <div id="output">...</div>
             <button onclick="copyOut()" style="background:#30363d; margin-top:10px;">COPIER</button>
-            <button onclick="location.reload()" style="background:transparent; color:#8b949e; font-size:11px; border:none;">FERMER</button>
+            <button onclick="location.reload()" style="background:transparent; color:#8b949e; border:none; font-size:11px;">FERMER</button>
         </div>
     </div>
 
     <script>
-        // LE MOT SECRET EST ICI (Tu peux le changer)
-        const MY_SECRET = "pizza"; 
+        // C'est l'empreinte du mot "pizza". Impossible de retrouver "pizza" à partir de ça.
+        const HASH_SECRET = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918";
 
-        // --- DÉTECTION ---
-        let taps = 0;
-        let last = 0;
-        let buffer = "";
+        // Fonction pour vérifier si le mot est bon
+        function checkCode(input) {
+            if(!input) return;
+            const cleanInput = input.toLowerCase().trim();
+            const hashedInput = CryptoJS.SHA256(cleanInput).toString();
+            if(hashedInput === HASH_SECRET) {
+                document.getElementById('content-404').style.display = 'none';
+                document.getElementById('safe-zone').style.display = 'flex';
+                document.body.style.backgroundColor = "#0d1117";
+            } else {
+                alert("Code incorrect.");
+            }
+        }
 
-        // Pour Ordinateur
-        window.addEventListener("keydown", (e) => {
-            buffer += e.key.toLowerCase();
-            if (buffer.includes(MY_SECRET)) show();
-            if (buffer.length > 20) buffer = "";
-        });
-
-        // Pour iPhone (5 clics sur le logo)
+        // iPhone : 5 taps
+        let taps = 0, last = 0;
         function handleTap() {
             const now = Date.now();
             if (now - last < 500) taps++; else taps = 1;
             last = now;
             if (taps === 5) {
-                const a = prompt("Code ?");
-                // On compare sans se soucier des majuscules ou des espaces
-                if (a && a.toLowerCase().trim() === MY_SECRET) show();
-                else alert("Code incorrect");
+                checkCode(prompt("Entrez le mot de passe d'accès :"));
                 taps = 0;
             }
         }
 
-        function show() {
-            document.getElementById('content-404').style.display = 'none';
-            document.getElementById('safe-zone').style.display = 'flex';
-            document.body.style.backgroundColor = "#0d1117";
-        }
+        // Ordinateur : détection automatique
+        let keys = "";
+        window.addEventListener("keydown", (e) => {
+            keys += e.key.toLowerCase();
+            if (keys.length > 20) keys = keys.substring(1);
+            if (keys.includes("pizza")) checkCode("pizza");
+        });
 
-        // --- CRYPTO ---
+        // Logique de cryptage
         function run(enc) {
             const val = document.getElementById('main-input').value;
             const k = document.getElementById('aes-key').value;
-            const res = document.getElementById('output');
-            if(!val || !k) return alert("Remplis les champs");
+            if(!val || !k) return alert("Remplis tout !");
             try {
-                if(enc) res.innerText = CryptoJS.AES.encrypt(val, k).toString();
+                if(enc) document.getElementById('output').innerText = CryptoJS.AES.encrypt(val, k).toString();
                 else {
                     const d = CryptoJS.AES.decrypt(val, k).toString(CryptoJS.enc.Utf8);
-                    res.innerText = d || "Clé AES invalide";
+                    document.getElementById('output').innerText = d || "Clé AES fausse";
                 }
-            } catch(e) { res.innerText = "Erreur de format"; }
+            } catch(e) { document.getElementById('output').innerText = "Erreur de format"; }
         }
 
         function copyOut() {
