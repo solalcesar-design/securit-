@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>404 Not Found</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        body { font-family: 'Courier New', monospace; background: white; color: #333; margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        #fake-404 { text-align: left; width: 80%; max-width: 600px; }
+        #safe-zone { display: none; background: #1a1a1a; color: #00ff00; padding: 30px; border-radius: 5px; box-shadow: 0 0 20px rgba(0,0,0,0.5); width: 90%; max-width: 500px; }
+        textarea, input { width: 100%; background: #000; border: 1px solid #00ff00; color: #00ff00; padding: 10px; margin: 10px 0; box-sizing: border-box; }
+        button { background: #00ff00; color: black; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; width: 100%; margin: 5px 0; }
+        button:hover { background: #00cc00; }
+        .result-area { margin-top: 15px; padding: 10px; border: 1px dashed #00ff00; min-height: 50px; word-break: break-all; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+    <div id="fake-404">
+        <h1>404 Not Found</h1>
+        <p>The requested URL was not found on this server.</p>
+        <hr>
+        <address>Apache/2.4.41 (Ubuntu) Server at localhost Port 443</address>
+    </div>
+
+    <div id="safe-zone">
+        <h3>[ SYSTÈME DE MESSAGERIE CHIFFRÉ ]</h3>
+        <input type="password" id="key" placeholder="CLEF DE CHIFFREMENT">
+        <textarea id="data" placeholder="Message à crypter OU Code à décrypter"></textarea>
+        
+        <button onclick="process(true)">CHIFFRER (ENCRYPT)</button>
+        <button onclick="process(false)">DÉCHIFFRER (DECRYPT)</button>
+
+        <div class="result-area" id="output">En attente d'action...</div>
+        <button onclick="copyToClipboard()" style="background:#444; color:white; font-size:0.8em;">Copier le résultat</button>
+    </div>
+
+    <script>
+        // Le code d'activation est 'access' (tu peux le changer ici)
+        let combo = "";
+        const trigger = "access"; 
+
+        window.onkeydown = (e) => {
+            combo += e.key;
+            if (combo.includes(trigger)) {
+                document.getElementById('fake-404').style.display = 'none';
+                document.getElementById('safe-zone').style.display = 'block';
+                document.body.style.background = '#0a0a0a';
+            }
+        };
+
+        function process(isEncrypt) {
+            const text = document.getElementById('data').value;
+            const password = document.getElementById('key').value;
+            const outputDiv = document.getElementById('output');
+
+            if (!text || !password) {
+                alert("Erreur: Remplissez tous les champs.");
+                return;
+            }
+
+            try {
+                if (isEncrypt) {
+                    // Chiffrement AES-256
+                    const encrypted = CryptoJS.AES.encrypt(text, password).toString();
+                    outputDiv.innerText = encrypted;
+                } else {
+                    // Déchiffrement
+                    const bytes = CryptoJS.AES.decrypt(text, password);
+                    const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+                    
+                    if (!decrypted) throw new Error();
+                    outputDiv.innerText = decrypted;
+                }
+            } catch (e) {
+                outputDiv.innerText = "ERREUR : Clef invalide ou données corrompues.";
+            }
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('output').innerText;
+            navigator.clipboard.writeText(text);
+            alert("Copié !");
+        }
+    </script>
+</body>
+</html>
