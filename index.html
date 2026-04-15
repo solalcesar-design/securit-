@@ -14,13 +14,11 @@
         
         /* Interface Secrète */
         #safe-zone { display: none; background: #0d1117; color: #c9d1d9; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; padding: 20px; box-sizing: border-box; flex-direction: column; align-items: center; justify-content: center; }
-        .box { background: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        h2 { margin-top: 0; color: #58a6ff; font-size: 1.2rem; }
+        .box { background: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; }
         textarea, input { width: 100%; background: #010409; border: 1px solid #30363d; color: #e6edf3; padding: 12px; margin: 8px 0; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        button { background: #238636; color: white; border: none; padding: 12px; cursor: pointer; border-radius: 6px; width: 100%; font-weight: 600; margin: 5px 0; font-size: 16px; transition: 0.2s; }
-        button:active { transform: scale(0.98); background: #2ea043; }
-        #output { margin-top: 15px; padding: 12px; background: #010409; border: 1px solid #30363d; min-height: 80px; word-break: break-all; font-family: monospace; font-size: 13px; border-radius: 6px; overflow-y: auto; text-align: left; }
-        #trigger-icon { padding: 20px; -webkit-tap-highlight-color: transparent; }
+        button { background: #238636; color: white; border: none; padding: 12px; cursor: pointer; border-radius: 6px; width: 100%; font-weight: 600; margin: 5px 0; font-size: 16px; }
+        #output { margin-top: 15px; padding: 12px; background: #010409; border: 1px solid #30363d; min-height: 80px; word-break: break-all; font-family: monospace; font-size: 13px; border-radius: 6px; text-align: left; overflow-y: auto; }
+        #trigger-icon { padding: 20px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
     </style>
 </head>
 <body>
@@ -40,85 +38,70 @@
 
     <div id="safe-zone">
         <div class="box">
-            <h2>🔐 Ghost Messenger</h2>
-            <input type="password" id="aes-key" placeholder="Clé Secrète (ex: 1234)">
-            <textarea id="main-input" placeholder="Message à crypter ou code à décrypter..."></textarea>
-            <button onclick="process(true)">🔒 CRYPTER</button>
-            <button onclick="process(false)">🔓 DÉCRYPTER</button>
-            <div id="output">En attente...</div>
-            <button onclick="copyResult()" style="background:#30363d; margin-top:10px;">COPIER LE RÉSULTAT</button>
-            <button onclick="location.reload()" style="background:transparent; color:#8b949e; font-size:12px;">✖ FERMER</button>
+            <h2 style="margin:0 0 10px 0; color:#58a6ff;">🔐 Vault</h2>
+            <input type="password" id="aes-key" placeholder="Clé Secrète commune">
+            <textarea id="main-input" placeholder="Message ou code..."></textarea>
+            <button onclick="run(true)">CRYPTER</button>
+            <button onclick="run(false)">DÉCRYPTER</button>
+            <div id="output">...</div>
+            <button onclick="copyOut()" style="background:#30363d; margin-top:10px;">COPIER</button>
+            <button onclick="location.reload()" style="background:transparent; color:#8b949e; font-size:11px; border:none;">FERMER</button>
         </div>
     </div>
 
     <script>
-        // Le hash SHA-256 pour "pizza"
-        const HASH_KEY = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918";
+        // LE MOT SECRET EST ICI (Tu peux le changer)
+        const MY_SECRET = "pizza"; 
 
-        // --- DÉTECTION ORDINATEUR (Clavier) ---
+        // --- DÉTECTION ---
+        let taps = 0;
+        let last = 0;
         let buffer = "";
+
+        // Pour Ordinateur
         window.addEventListener("keydown", (e) => {
-            if (e.key.length === 1) {
-                buffer += e.key.toLowerCase();
-                if (buffer.length > 10) buffer = buffer.substring(1);
-                if (buffer.includes("pizza")) showApp();
-            }
+            buffer += e.key.toLowerCase();
+            if (buffer.includes(MY_SECRET)) show();
+            if (buffer.length > 20) buffer = "";
         });
 
-        // --- DÉTECTION IPHONE (5 Taps sur le logo) ---
-        let taps = 0;
-        let lastTime = 0;
+        // Pour iPhone (5 clics sur le logo)
         function handleTap() {
             const now = Date.now();
-            if (now - lastTime < 500) taps++; else taps = 1;
-            lastTime = now;
-
+            if (now - last < 500) taps++; else taps = 1;
+            last = now;
             if (taps === 5) {
-                const ask = prompt("Code d'accès :");
-                if (ask) {
-                    // On force en minuscule et on enlève les espaces de l'iPhone
-                    const cleanAsk = ask.toLowerCase().trim();
-                    if (CryptoJS.SHA256(cleanAsk).toString() === HASH_KEY) {
-                        showApp();
-                    } else {
-                        alert("Code incorrect");
-                    }
-                }
+                const a = prompt("Code ?");
+                // On compare sans se soucier des majuscules ou des espaces
+                if (a && a.toLowerCase().trim() === MY_SECRET) show();
+                else alert("Code incorrect");
                 taps = 0;
             }
         }
 
-        function showApp() {
+        function show() {
             document.getElementById('content-404').style.display = 'none';
             document.getElementById('safe-zone').style.display = 'flex';
             document.body.style.backgroundColor = "#0d1117";
         }
 
-        // --- LOGIQUE DE CRYPTAGE ---
-        function process(isEncrypt) {
-            const text = document.getElementById('main-input').value;
-            const key = document.getElementById('aes-key').value;
-            const out = document.getElementById('output');
-
-            if (!text || !key) return alert("Remplis tout !");
-
+        // --- CRYPTO ---
+        function run(enc) {
+            const val = document.getElementById('main-input').value;
+            const k = document.getElementById('aes-key').value;
+            const res = document.getElementById('output');
+            if(!val || !k) return alert("Remplis les champs");
             try {
-                if (isEncrypt) {
-                    out.innerText = CryptoJS.AES.encrypt(text, key).toString();
-                } else {
-                    const bytes = CryptoJS.AES.decrypt(text, key);
-                    const decoded = bytes.toString(CryptoJS.enc.Utf8);
-                    out.innerText = decoded || "❌ Clé incorrecte !";
+                if(enc) res.innerText = CryptoJS.AES.encrypt(val, k).toString();
+                else {
+                    const d = CryptoJS.AES.decrypt(val, k).toString(CryptoJS.enc.Utf8);
+                    res.innerText = d || "Clé AES invalide";
                 }
-            } catch (e) {
-                out.innerText = "❌ Erreur de format";
-            }
+            } catch(e) { res.innerText = "Erreur de format"; }
         }
 
-        function copyResult() {
-            const text = document.getElementById('output').innerText;
-            if (text.includes("En attente") || text.includes("❌")) return;
-            navigator.clipboard.writeText(text);
+        function copyOut() {
+            navigator.clipboard.writeText(document.getElementById('output').innerText);
             alert("Copié !");
         }
     </script>
