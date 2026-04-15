@@ -1,106 +1,87 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Page not found · GitHub Pages</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; color: #24292e; background-color: #fff; padding: 20px; box-sizing: border-box; }
-        h1 { font-size: 80px; font-weight: 300; margin: 0; }
-        p { font-size: 18px; color: #6a737d; margin: 15px 0; }
-        .details { font-size: 14px; color: #586069; max-width: 500px; line-height: 1.5; }
-        .footer { position: absolute; bottom: 30px; width: 100%; color: #d1d5da; }
-        
-        #safe-zone { display: none; background: #0d1117; color: #c9d1d9; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; padding: 20px; box-sizing: border-box; flex-direction: column; align-items: center; justify-content: center; }
-        .box { background: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; }
+        body { font-family: -apple-system, system-ui, sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; color: #24292e; background-color: #fff; padding: 20px; }
+        #safe-zone { display: none; background: #0d1117; color: #c9d1d9; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000; flex-direction: column; align-items: center; justify-content: center; }
+        .box { background: #161b22; border: 1px solid #30363d; padding: 20px; border-radius: 12px; width: 100%; max-width: 350px; }
         textarea, input { width: 100%; background: #010409; border: 1px solid #30363d; color: #e6edf3; padding: 12px; margin: 8px 0; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        button { background: #238636; color: white; border: none; padding: 12px; cursor: pointer; border-radius: 6px; width: 100%; font-weight: 600; margin: 5px 0; font-size: 16px; }
-        #output { margin-top: 15px; padding: 12px; background: #010409; border: 1px solid #30363d; min-height: 80px; word-break: break-all; font-family: monospace; font-size: 13px; border-radius: 6px; text-align: left; }
-        #trigger { padding: 20px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        button { background: #238636; color: white; border: none; padding: 12px; border-radius: 6px; width: 100%; font-weight: bold; margin-top: 5px; }
+        #output { margin-top: 15px; padding: 10px; background: #000; border: 1px solid #333; min-height: 50px; word-break: break-all; font-family: monospace; font-size: 12px; color: #00ff00; }
+        #trigger { position: absolute; bottom: 20px; cursor: pointer; opacity: 0.1; }
     </style>
 </head>
 <body>
 
     <div id="content-404">
-        <h1>404</h1>
-        <p><strong>File not found</strong></p>
-        <div class="details">The site configured at this address does not contain the requested file.</div>
-        <div class="footer">
-            <div id="trigger" onclick="handleTap()">
-                <svg height="32" viewBox="0 0 16 16" width="32"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-            </div>
+        <h1 style="font-size: 60px; margin: 0;">404</h1>
+        <p>File not found</p>
+        <div id="trigger" onclick="demanderCode()">
+            <svg height="32" viewBox="0 0 16 16" width="32"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
         </div>
     </div>
 
     <div id="safe-zone">
         <div class="box">
-            <h2 style="margin:0 0 10px 0; color:#58a6ff;">🔐 Vault Privé</h2>
-            <input type="password" id="aes-key" placeholder="Clé de chiffrement (AES)">
-            <textarea id="main-input" placeholder="Message..."></textarea>
-            <button onclick="run(true)">CRYPTER</button>
-            <button onclick="run(false)">DÉCRYPTER</button>
+            <h3 style="margin:0">🔒 Système Privé</h3>
+            <input type="password" id="cle-aes" placeholder="Clé Secrète Commune">
+            <textarea id="texte" placeholder="Message ou Code..."></textarea>
+            <button onclick="agir(true)">CRYPTER</button>
+            <button onclick="agir(false)">DÉCRYPTER</button>
             <div id="output">...</div>
-            <button onclick="copyOut()" style="background:#30363d; margin-top:10px;">COPIER</button>
-            <button onclick="location.reload()" style="background:transparent; color:#8b949e; border:none; font-size:11px;">FERMER</button>
+            <button onclick="location.reload()" style="background:#444; margin-top:10px;">QUITTER</button>
         </div>
     </div>
 
     <script>
-        // C'est l'empreinte du mot "pizza". Impossible de retrouver "pizza" à partir de ça.
-        const HASH_SECRET = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918";
+        // LE MOT DE PASSE EST ICI EN CLAIR POUR ÉVITER TOUT BUG DE HASH
+        // Personne ne le verra s'ils ne regardent pas le code source.
+        const SECRET = "pizza"; 
 
-        // Fonction pour vérifier si le mot est bon
-        function checkCode(input) {
-            if(!input) return;
-            const cleanInput = input.toLowerCase().trim();
-            const hashedInput = CryptoJS.SHA256(cleanInput).toString();
-            if(hashedInput === HASH_SECRET) {
-                document.getElementById('content-404').style.display = 'none';
-                document.getElementById('safe-zone').style.display = 'flex';
-                document.body.style.backgroundColor = "#0d1117";
-            } else {
-                alert("Code incorrect.");
+        function demanderCode() {
+            let rep = prompt("Entrez le mot de passe d'accès (Indice: un plat italien)");
+            if (rep) {
+                // On enlève les majuscules et les espaces
+                let propre = rep.toLowerCase().trim();
+                if (propre === SECRET) {
+                    ouvrir();
+                } else {
+                    alert("Code incorrect : '" + propre + "' ne correspond pas.");
+                }
             }
         }
 
-        // iPhone : 5 taps
-        let taps = 0, last = 0;
-        function handleTap() {
-            const now = Date.now();
-            if (now - last < 500) taps++; else taps = 1;
-            last = now;
-            if (taps === 5) {
-                checkCode(prompt("Entrez le mot de passe d'accès :"));
-                taps = 0;
-            }
+        function ouvrir() {
+            document.getElementById('content-404').style.display = 'none';
+            document.getElementById('safe-zone').style.display = 'flex';
+            document.body.style.backgroundColor = "#0d1117";
         }
 
-        // Ordinateur : détection automatique
-        let keys = "";
+        // Détection clavier (PC)
+        let tapage = "";
         window.addEventListener("keydown", (e) => {
-            keys += e.key.toLowerCase();
-            if (keys.length > 20) keys = keys.substring(1);
-            if (keys.includes("pizza")) checkCode("pizza");
+            tapage += e.key.toLowerCase();
+            if (tapage.includes(SECRET)) ouvrir();
+            if (tapage.length > 10) tapage = "";
         });
 
-        // Logique de cryptage
-        function run(enc) {
-            const val = document.getElementById('main-input').value;
-            const k = document.getElementById('aes-key').value;
-            if(!val || !k) return alert("Remplis tout !");
+        function agir(crypter) {
+            const t = document.getElementById('texte').value;
+            const k = document.getElementById('cle-aes').value;
+            if(!t || !k) return alert("Remplis les deux cases !");
+            
             try {
-                if(enc) document.getElementById('output').innerText = CryptoJS.AES.encrypt(val, k).toString();
-                else {
-                    const d = CryptoJS.AES.decrypt(val, k).toString(CryptoJS.enc.Utf8);
-                    document.getElementById('output').innerText = d || "Clé AES fausse";
+                if(crypter) {
+                    document.getElementById('output').innerText = CryptoJS.AES.encrypt(t, k).toString();
+                } else {
+                    const d = CryptoJS.AES.decrypt(t, k).toString(CryptoJS.enc.Utf8);
+                    document.getElementById('output').innerText = d || "Clé incorrecte";
                 }
-            } catch(e) { document.getElementById('output').innerText = "Erreur de format"; }
-        }
-
-        function copyOut() {
-            navigator.clipboard.writeText(document.getElementById('output').innerText);
-            alert("Copié !");
+            } catch(e) { document.getElementById('output').innerText = "Erreur de texte"; }
         }
     </script>
 </body>
